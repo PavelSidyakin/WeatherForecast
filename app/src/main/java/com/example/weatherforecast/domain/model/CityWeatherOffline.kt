@@ -2,7 +2,7 @@ package com.example.weatherforecast.domain.model
 
 import java.util.Date
 
-data class CityWeatherOfflineForecast(
+data class CityWeatherOffline(
     val city: City,
     val timeToTemperatureMap: Map<Date, Float>
 ) {

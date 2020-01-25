@@ -4,7 +4,7 @@ import com.example.weatherforecast.common.GsonSerializable
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-data class WeatherOnlineForecastRequestResultData(
+data class WeatherOnlineRequestDataItem(
     val date: Date,
     val city: City,
     val tempType: TemperatureType,
