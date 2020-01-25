@@ -1,4 +1,4 @@
-package com.example.weatherforecast.domain
+package com.example.weatherforecast.common
 
 import android.content.Context
 import com.example.weatherforecast.TheApplication

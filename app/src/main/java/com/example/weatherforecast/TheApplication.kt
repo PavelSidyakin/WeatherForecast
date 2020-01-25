@@ -3,7 +3,7 @@ package com.example.weatherforecast
 import android.app.Application
 import com.example.weatherforecast.di.app.AppComponent
 import com.example.weatherforecast.di.app.DaggerAppComponent
-import com.example.weatherforecast.domain.ApplicationProvider
+import com.example.weatherforecast.common.ApplicationProvider
 import javax.inject.Inject
 
 

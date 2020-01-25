@@ -1,7 +1,7 @@
 package com.example.weatherforecast.di.app
 
-import com.example.weatherforecast.data.ApplicationProviderImpl
-import com.example.weatherforecast.domain.ApplicationProvider
+import com.example.weatherforecast.common.ApplicationProviderImpl
+import com.example.weatherforecast.common.ApplicationProvider
 import com.example.weatherforecast.utils.DispatcherProvider
 import com.example.weatherforecast.utils.DispatcherProviderImpl
 import dagger.Binds

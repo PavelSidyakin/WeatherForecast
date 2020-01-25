@@ -1,8 +1,7 @@
-package com.example.weatherforecast.data
+package com.example.weatherforecast.common
 
 import android.content.Context
 import com.example.weatherforecast.TheApplication
-import com.example.weatherforecast.domain.ApplicationProvider
 import javax.inject.Inject
 
 class ApplicationProviderImpl

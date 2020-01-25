@@ -67,6 +67,6 @@ class WeatherOnlineRepositoryImpl
     }
 
     private companion object {
-        private const val TAG = "WeatherOnlineRepository"
+        private const val TAG = "WeatherOnlineRepo"
     }
 }
