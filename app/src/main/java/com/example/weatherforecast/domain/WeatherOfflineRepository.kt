@@ -8,11 +8,11 @@ interface WeatherOfflineRepository {
 
     suspend fun requestAllCitiesInfo(): Map<String, CityInfo>
 
-    suspend fun requestCityWeather(cityName: String): CityWeather
+    suspend fun requestCityWeather(cityName: String): Map<Date, Float>
 
     suspend fun saveCitiesWeather(citiesWeather: Map<String, CityWeather>)
 
-    suspend fun saveCitiesInfo(citiesWeather: Map<String, CityInfo>)
+    suspend fun saveCitiesInfo(citiesInfo: Map<String, CityInfo>)
 
     suspend fun clearWeatherOlderThan(date: Date)
 

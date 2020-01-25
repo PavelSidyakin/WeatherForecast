@@ -4,6 +4,6 @@ import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResult
 
 interface WeatherOnlineRepository {
 
-    suspend fun requestWeatherForecast(): WeatherOnlineRequestResult
+    suspend fun requestWeather(): WeatherOnlineRequestResult
 
 }

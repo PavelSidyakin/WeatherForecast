@@ -20,7 +20,7 @@ class WeatherOnlineRepositoryImpl
 
     private val retrofit: Retrofit by lazy { createRetrofit() }
 
-    override suspend fun requestWeatherForecast(): WeatherOnlineRequestResult {
+    override suspend fun requestWeather(): WeatherOnlineRequestResult {
         return try {
             val weatherService = createWeatherService()
 
