@@ -1,7 +1,7 @@
 package com.example.weatherforecast.domain
 
 import com.example.weatherforecast.domain.model.CityInfo
-import com.example.weatherforecast.domain.model.UpdateWeatherResultCode
+import com.example.weatherforecast.domain.model.UpdateOfflineResultCode
 import java.util.Date
 
 interface WeatherInteractor {
@@ -10,6 +10,8 @@ interface WeatherInteractor {
 
     suspend fun requestCityWeather(cityName: String): Map<Date, Float>
 
-    suspend fun updateOfflineResult(): UpdateWeatherResultCode
+    suspend fun updateOfflineWeather(): UpdateOfflineResultCode
+
+    suspend fun updateOfflineCityInfo(): UpdateOfflineResultCode
 
 }

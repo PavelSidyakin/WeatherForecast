@@ -103,6 +103,17 @@ class WeatherOfflineRepositoryImpl
         return insertToDbWithResult { dbInsertCitiesWeather(cdbCitiesWeather) }
     }
 
+    override suspend fun clearCitiesInfo() {
+        withContext(dispatcherProvider.io()) {
+            weatherDb.weatherDao().dbClearCitiesInfo()
+            File(picturesDir).deleteRecursively()
+        }
+    }
+
+    override suspend fun clearCitiesWeather() {
+        weatherDb.weatherDao().dbClearCitiesWeather()
+    }
+
     override suspend fun clearAllData() {
         withContext(dispatcherProvider.io()) {
             weatherDb.clearAllTables()
@@ -159,6 +170,13 @@ class WeatherOfflineRepositoryImpl
 
         @Query("DELETE FROM t_city_weather WHERE f_time < :time")
         suspend fun dbDeleteWeatherOlderThan(time: Long)
+
+        @Query("DELETE FROM t_city_info")
+        suspend fun dbClearCitiesInfo()
+
+        @Query("DELETE FROM t_city_weather")
+        suspend fun dbClearCitiesWeather()
+
     }
 
     @Entity(tableName = "t_city_info")

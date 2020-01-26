@@ -1,6 +1,6 @@
 package com.example.weatherforecast.domain.model
 
-enum class UpdateWeatherResultCode {
+enum class UpdateOfflineResultCode {
     OK,
 
     NO_NETWORK,

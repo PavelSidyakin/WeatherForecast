@@ -17,6 +17,10 @@ interface WeatherOfflineRepository {
 
     suspend fun clearWeatherOlderThan(date: Date)
 
+    suspend fun clearCitiesWeather()
+
+    suspend fun clearCitiesInfo()
+
     suspend fun clearAllData()
 
 }

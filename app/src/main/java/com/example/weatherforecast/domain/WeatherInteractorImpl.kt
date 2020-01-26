@@ -2,7 +2,7 @@ package com.example.weatherforecast.domain
 
 import com.example.weatherforecast.domain.model.CityInfo
 import com.example.weatherforecast.domain.model.CityWeather
-import com.example.weatherforecast.domain.model.UpdateWeatherResultCode
+import com.example.weatherforecast.domain.model.UpdateOfflineResultCode
 import com.example.weatherforecast.domain.model.data.WeatherOfflineSaveResultCode
 import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestDataItem
 import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResult
@@ -28,36 +28,44 @@ class WeatherInteractorImpl
         return weatherOfflineRepository.requestCityWeather(cityName)
     }
 
-    override suspend fun updateOfflineResult(): UpdateWeatherResultCode {
+    override suspend fun updateOfflineWeather(): UpdateOfflineResultCode {
+        return saveOffline( { saveCitiesWeather(it) }, { weatherOfflineRepository.clearCitiesWeather() } )
+    }
+
+    override suspend fun updateOfflineCityInfo(): UpdateOfflineResultCode {
+        return saveOffline( { saveCitiesInfo(it) }, { weatherOfflineRepository.clearCitiesInfo() } )
+    }
+
+    private suspend fun saveOffline(
+        saveBlock: suspend (onlineWeatherList: List<WeatherOnlineRequestDataItem>) -> WeatherOfflineSaveResultCode,
+        clearDataBlock: suspend () -> Unit
+    ): UpdateOfflineResultCode {
         val onlineResult: WeatherOnlineRequestResult = weatherOnlineRepository.requestWeather()
 
         if (onlineResult.resultCode == WeatherOnlineRequestResultCode.NO_NETWORK) {
-            return UpdateWeatherResultCode.NO_NETWORK
+            return UpdateOfflineResultCode.NO_NETWORK
         }
 
         if (onlineResult.resultCode != WeatherOnlineRequestResultCode.OK) {
-            return UpdateWeatherResultCode.GENERAL_ERROR
+            return UpdateOfflineResultCode.GENERAL_ERROR
         }
 
         val onlineData: List<WeatherOnlineRequestDataItem> = onlineResult.data
-            ?: return UpdateWeatherResultCode.GENERAL_ERROR
+            ?: return UpdateOfflineResultCode.GENERAL_ERROR
 
-        var saveCitiesWeatherResult = saveCitiesWeather(onlineData)
-        var saveCitiesInfoResult = saveCitiesInfo(onlineData)
+        var saveOfflineResult = saveBlock(onlineData)
 
-        if(saveCitiesWeatherResult != WeatherOfflineSaveResultCode.OK || saveCitiesInfoResult != WeatherOfflineSaveResultCode.OK) {
+        if(saveOfflineResult != WeatherOfflineSaveResultCode.OK) {
             // Something wrong with the local storage.
             // Try to cleanup and retry
-            weatherOfflineRepository.clearAllData()
-            saveCitiesWeatherResult = saveCitiesWeather(onlineData)
-            saveCitiesInfoResult = saveCitiesInfo(onlineData)
+            clearDataBlock()
+            saveOfflineResult = saveBlock(onlineData)
         }
 
-        return if (saveCitiesInfoResult == WeatherOfflineSaveResultCode.OK
-                && saveCitiesWeatherResult == WeatherOfflineSaveResultCode.OK) {
-            UpdateWeatherResultCode.OK
+        return if (saveOfflineResult == WeatherOfflineSaveResultCode.OK) {
+            UpdateOfflineResultCode.OK
         } else {
-            UpdateWeatherResultCode.GENERAL_ERROR
+            UpdateOfflineResultCode.GENERAL_ERROR
         }
     }
 

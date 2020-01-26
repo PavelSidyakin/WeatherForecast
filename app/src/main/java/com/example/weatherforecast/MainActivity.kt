@@ -5,8 +5,6 @@ import android.os.Bundle
 import com.example.weatherforecast.domain.WeatherInteractor
 import com.example.weatherforecast.domain.WeatherOfflineRepository
 import com.example.weatherforecast.domain.WeatherOnlineRepository
-import com.example.weatherforecast.domain.model.CityInfo
-import com.example.weatherforecast.domain.model.CityWeather
 import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResult
 import com.example.weatherforecast.utils.logs.log
 import kotlinx.coroutines.GlobalScope
@@ -58,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 //
 //            weatherOfflineRepository.saveCitiesWeather(toSave)
 
-            weatherInteractor.updateOfflineResult()
+            weatherInteractor.updateOfflineWeather()
 
             log { i("Test", "${weatherInteractor.requestAllCitiesInfo()}") }
 
