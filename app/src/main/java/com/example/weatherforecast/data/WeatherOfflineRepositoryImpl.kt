@@ -1,6 +1,5 @@
 package com.example.weatherforecast.data
 
-import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
@@ -18,8 +17,6 @@ import com.example.weatherforecast.domain.model.CityWeather
 import com.example.weatherforecast.domain.model.data.WeatherOfflineSaveResultCode
 import com.example.weatherforecast.utils.DispatcherProvider
 import com.example.weatherforecast.utils.logs.log
-import kotlinx.coroutines.withContext
-import java.io.File
 import java.util.Date
 import javax.inject.Inject
 
@@ -30,14 +27,10 @@ class WeatherOfflineRepositoryImpl
         private val dispatcherProvider: DispatcherProvider
     ) : WeatherOfflineRepository {
 
-    private val picturesDir: String by lazy {
-        applicationProvider.applicationContext.getDir("pictures", Context.MODE_PRIVATE).absolutePath
-    }
-
     private val weatherDb: WeatherDatabase by lazy {
         Room.databaseBuilder(
             applicationProvider.applicationContext,
-            WeatherDatabase::class.java, "db_weather_database"
+            WeatherDatabase::class.java, "weather_database.db"
         ).build()
     }
 
@@ -45,17 +38,7 @@ class WeatherOfflineRepositoryImpl
         return weatherDb.weatherDao().dbRequestAllCitiesInfo().associateBy({ dbCityInfo ->
             dbCityInfo.cityName
         }, { dbCityInfo ->
-            if (!dbCityInfo.pictureFilePath.isNullOrBlank()) {
-                withContext(dispatcherProvider.io()) {
-                    try {
-                        CityInfo(File(dbCityInfo.pictureFilePath).readBytes())
-                    } catch (exception: Exception) {
-                        CityInfo(null)
-                    }
-                }
-            } else {
-                CityInfo(null)
-            }
+            CityInfo(dbCityInfo.pictureUrl.takeIf { !it.isNullOrBlank() })
         })
     }
 
@@ -68,24 +51,20 @@ class WeatherOfflineRepositoryImpl
     }
 
     override suspend fun saveCitiesInfo(citiesInfo: Map<String, CityInfo>): WeatherOfflineSaveResultCode {
-        val dbCitiesInfos: MutableList<DbCityInfo> = mutableListOf()
+        val dbCitiesInfo: MutableList<DbCityInfo> = mutableListOf()
 
         citiesInfo.forEach { entry ->
             val cityName = entry.key
             val cityInfo = entry.value
 
-            val picturePath = cityInfo.pictureBytes?.let {
-                savePictureToFile(cityName, cityInfo.pictureBytes)
-            }
-
-            val dbCityInfo = DbCityInfo(cityName, picturePath?.absolutePath?:"")
-            dbCitiesInfos.add(dbCityInfo)
+            val dbCityInfo = DbCityInfo(cityName, cityInfo.pictureUrl)
+            dbCitiesInfo.add(dbCityInfo)
 
 
             log { i(TAG, "WeatherOfflineRepositoryImpl.saveCitiesInfo(). $dbCityInfo") }
         }
 
-        return insertToDbWithResult { dbInsertCitiesInfos(dbCitiesInfos) }
+        return insertToDbWithResult { dbInsertCitiesInfos(dbCitiesInfo) }
     }
 
     override suspend fun saveCitiesWeather(citiesWeather: Map<String, CityWeather>): WeatherOfflineSaveResultCode {
@@ -104,10 +83,7 @@ class WeatherOfflineRepositoryImpl
     }
 
     override suspend fun clearCitiesInfo() {
-        withContext(dispatcherProvider.io()) {
-            weatherDb.weatherDao().dbClearCitiesInfo()
-            File(picturesDir).deleteRecursively()
-        }
+        weatherDb.weatherDao().dbClearCitiesInfo()
     }
 
     override suspend fun clearCitiesWeather() {
@@ -115,11 +91,7 @@ class WeatherOfflineRepositoryImpl
     }
 
     override suspend fun clearAllData() {
-        withContext(dispatcherProvider.io()) {
-            weatherDb.clearAllTables()
-
-            File(picturesDir).deleteRecursively()
-        }
+        weatherDb.clearAllTables()
     }
 
     override suspend fun clearWeatherOlderThan(date: Date) {
@@ -132,14 +104,6 @@ class WeatherOfflineRepositoryImpl
             WeatherOfflineSaveResultCode.OK
         } catch (exception: Exception) {
             WeatherOfflineSaveResultCode.ERROR
-        }
-    }
-
-    private suspend fun savePictureToFile(cityName: String, pictureBytes: ByteArray): File {
-        return withContext(dispatcherProvider.io()) {
-            val pictureFile = File(picturesDir).resolve(cityName)
-            pictureFile.writeBytes(pictureBytes)
-            pictureFile
         }
     }
 
@@ -185,8 +149,8 @@ class WeatherOfflineRepositoryImpl
         @ColumnInfo(name = "f_city_name")
         val cityName: String,
 
-        @ColumnInfo(name = "f_picture_file_path")
-        val pictureFilePath: String?
+        @ColumnInfo(name = "f_picture_url")
+        val pictureUrl: String?
     )
 
     @Entity(tableName = "t_city_weather", primaryKeys = ["f_city_name", "f_time"])

@@ -14,4 +14,6 @@ interface WeatherInteractor {
 
     suspend fun updateOfflineCityInfo(): UpdateOfflineResultCode
 
+    suspend fun updateAllOfflineInfo(): UpdateOfflineResultCode
+
 }

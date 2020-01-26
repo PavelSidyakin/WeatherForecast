@@ -15,8 +15,7 @@ class WeatherInteractorImpl
     @Inject
     constructor(
         private val weatherOfflineRepository: WeatherOfflineRepository,
-        private val weatherOnlineRepository: WeatherOnlineRepository,
-        private val fileDownloader: FileDownloader
+        private val weatherOnlineRepository: WeatherOnlineRepository
     )
     : WeatherInteractor {
 
@@ -34,6 +33,23 @@ class WeatherInteractorImpl
 
     override suspend fun updateOfflineCityInfo(): UpdateOfflineResultCode {
         return saveOffline( { saveCitiesInfo(it) }, { weatherOfflineRepository.clearCitiesInfo() } )
+    }
+
+    override suspend fun updateAllOfflineInfo(): UpdateOfflineResultCode {
+        return saveOffline( {
+            val saveOfflineWeatherResult = saveCitiesWeather(it)
+            val saveOfflineCityInfoResult = saveCitiesInfo(it)
+
+            return@saveOffline if (saveOfflineCityInfoResult == WeatherOfflineSaveResultCode.OK
+                && saveOfflineWeatherResult == WeatherOfflineSaveResultCode.OK) {
+                WeatherOfflineSaveResultCode.OK
+            } else {
+                WeatherOfflineSaveResultCode.ERROR
+            }
+        }, {
+            weatherOfflineRepository.clearCitiesWeather()
+            weatherOfflineRepository.clearCitiesInfo()
+        } )
     }
 
     private suspend fun saveOffline(
@@ -95,11 +111,7 @@ class WeatherInteractorImpl
             val cityPictureUrl = weatherOnlineRequestDataItem.city.picture
 
             if (!citiesInfoAccumulator.containsKey(cityName)) {
-                val pictureBytes = fileDownloader.downloadFile(cityPictureUrl)
-
-                if (pictureBytes != null) {
-                    citiesInfoAccumulator[cityName] = CityInfo(pictureBytes)
-                }
+                citiesInfoAccumulator[cityName] = CityInfo(cityPictureUrl)
             }
             citiesInfoAccumulator
         }

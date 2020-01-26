@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 //
 //            weatherOfflineRepository.saveCitiesWeather(toSave)
 
-            weatherInteractor.updateOfflineWeather()
+            weatherInteractor.updateAllOfflineInfo()
 
             log { i("Test", "${weatherInteractor.requestAllCitiesInfo()}") }
 
