@@ -10,10 +10,8 @@ interface WeatherInteractor {
 
     suspend fun requestCityWeather(cityName: String): Map<Date, Float>
 
-    suspend fun updateOfflineWeather(): UpdateOfflineResultCode
-
-    suspend fun updateOfflineCityInfo(): UpdateOfflineResultCode
-
     suspend fun updateAllOfflineInfo(): UpdateOfflineResultCode
+
+    fun getLastUpdateTime(): Long
 
 }

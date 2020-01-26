@@ -11,7 +11,7 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(theApplication: TheApplication)
 
-    fun getWeatherComponent(): WeatherScreenComponent
+    fun getWeatherScreenComponent(): WeatherScreenComponent
 
     interface Builder {
         fun build(): AppComponent

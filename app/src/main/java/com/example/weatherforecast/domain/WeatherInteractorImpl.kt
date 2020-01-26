@@ -7,6 +7,7 @@ import com.example.weatherforecast.domain.model.data.WeatherOfflineSaveResultCod
 import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestDataItem
 import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResult
 import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResultCode
+import com.example.weatherforecast.utils.logs.log
 import java.util.Date
 import javax.inject.Inject
 
@@ -15,7 +16,9 @@ class WeatherInteractorImpl
     @Inject
     constructor(
         private val weatherOfflineRepository: WeatherOfflineRepository,
-        private val weatherOnlineRepository: WeatherOnlineRepository
+        private val weatherOnlineRepository: WeatherOnlineRepository,
+        private val generalSettingsRepository: GeneralSettingsRepository,
+        private val timeProvider: TimeProvider
     )
     : WeatherInteractor {
 
@@ -27,29 +30,30 @@ class WeatherInteractorImpl
         return weatherOfflineRepository.requestCityWeather(cityName)
     }
 
-    override suspend fun updateOfflineWeather(): UpdateOfflineResultCode {
-        return saveOffline( { saveCitiesWeather(it) }, { weatherOfflineRepository.clearCitiesWeather() } )
-    }
-
-    override suspend fun updateOfflineCityInfo(): UpdateOfflineResultCode {
-        return saveOffline( { saveCitiesInfo(it) }, { weatherOfflineRepository.clearCitiesInfo() } )
-    }
-
     override suspend fun updateAllOfflineInfo(): UpdateOfflineResultCode {
         return saveOffline( {
-            val saveOfflineWeatherResult = saveCitiesWeather(it)
-            val saveOfflineCityInfoResult = saveCitiesInfo(it)
+                val saveOfflineWeatherResult = saveCitiesWeather(it)
+                val saveOfflineCityInfoResult = saveCitiesInfo(it)
 
-            return@saveOffline if (saveOfflineCityInfoResult == WeatherOfflineSaveResultCode.OK
-                && saveOfflineWeatherResult == WeatherOfflineSaveResultCode.OK) {
-                WeatherOfflineSaveResultCode.OK
-            } else {
-                WeatherOfflineSaveResultCode.ERROR
+                return@saveOffline if (saveOfflineCityInfoResult == WeatherOfflineSaveResultCode.OK
+                    && saveOfflineWeatherResult == WeatherOfflineSaveResultCode.OK) {
+                    WeatherOfflineSaveResultCode.OK
+                } else {
+                    WeatherOfflineSaveResultCode.ERROR
+                }
+            } , {
+                weatherOfflineRepository.clearCitiesWeather()
+                weatherOfflineRepository.clearCitiesInfo()
             }
-        }, {
-            weatherOfflineRepository.clearCitiesWeather()
-            weatherOfflineRepository.clearCitiesInfo()
-        } )
+        ).also { resultCode ->
+            if (resultCode == UpdateOfflineResultCode.OK) {
+                generalSettingsRepository.lastUpdateTime = timeProvider.currentTimeInMillis
+            }
+        }
+    }
+
+    override fun getLastUpdateTime(): Long {
+        return generalSettingsRepository.lastUpdateTime
     }
 
     private suspend fun saveOffline(
@@ -71,11 +75,14 @@ class WeatherInteractorImpl
 
         var saveOfflineResult = saveBlock(onlineData)
 
+        log { i(TAG, "WeatherInteractorImpl.saveOffline(). saveOfflineResult=$saveOfflineResult") }
+
         if(saveOfflineResult != WeatherOfflineSaveResultCode.OK) {
-            // Something wrong with the local storage.
-            // Try to cleanup and retry
+            log { i(TAG, "WeatherInteractorImpl.saveOffline(). Something wrong with the local storage. Trying to cleanup and retry...") }
+
             clearDataBlock()
             saveOfflineResult = saveBlock(onlineData)
+            log { i(TAG, "WeatherInteractorImpl.saveOffline(). saveOfflineResult=$saveOfflineResult") }
         }
 
         return if (saveOfflineResult == WeatherOfflineSaveResultCode.OK) {
@@ -98,11 +105,16 @@ class WeatherInteractorImpl
                 dateToTemperatureMap[date] = 0f
             }
 
-            dateToTemperatureMap[weatherOnlineRequestDataItem.date] = weatherOnlineRequestDataItem.temp
+            dateToTemperatureMap[weatherOnlineRequestDataItem.date] = convertTemperatureToCelsius(
+                weatherOnlineRequestDataItem.tempType,
+                weatherOnlineRequestDataItem.temp)
+
             citiesWeatherAccumulator
         }
 
-        return weatherOfflineRepository.saveCitiesWeather(citiesWeather)
+        return weatherOfflineRepository.saveCitiesWeather(citiesWeather).also {
+            log { i(TAG, "WeatherInteractorImpl.saveCitiesWeather(). result=$it") }
+        }
     }
 
     private suspend fun saveCitiesInfo(onlineWeatherList: List<WeatherOnlineRequestDataItem>): WeatherOfflineSaveResultCode {
@@ -116,7 +128,17 @@ class WeatherInteractorImpl
             citiesInfoAccumulator
         }
 
-        return weatherOfflineRepository.saveCitiesInfo(citiesInfo)
+        return weatherOfflineRepository.saveCitiesInfo(citiesInfo).also {
+            log { i(TAG, "WeatherInteractorImpl.saveCitiesInfo(). result=$it") }
+        }
+    }
+
+    private fun convertTemperatureToCelsius(temperatureType: WeatherOnlineRequestDataItem.TemperatureType, value: Float): Float {
+        return when(temperatureType) {
+            WeatherOnlineRequestDataItem.TemperatureType.KELVIN -> value - 273.15f
+            WeatherOnlineRequestDataItem.TemperatureType.CELSIUS -> value
+            WeatherOnlineRequestDataItem.TemperatureType.FAHRENHEIT -> (value - 32) / 1.8f
+        }
     }
 
     private companion object {
