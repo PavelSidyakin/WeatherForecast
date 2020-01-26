@@ -1,11 +1,9 @@
 package com.example.weatherforecast
 
 import android.app.Application
+import com.example.weatherforecast.common.ApplicationProvider
 import com.example.weatherforecast.di.app.AppComponent
 import com.example.weatherforecast.di.app.DaggerAppComponent
-import com.example.weatherforecast.common.ApplicationProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 

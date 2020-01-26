@@ -9,10 +9,7 @@ import com.example.weatherforecast.presentation.city_list.CityListItemData
 import com.example.weatherforecast.presentation.city_list.view.CityListView
 import com.example.weatherforecast.utils.DispatcherProvider
 import com.example.weatherforecast.utils.logs.XLog
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.runBlocking

@@ -23,9 +23,9 @@ internal class WeatherListItemViewHolder
 
         // Paint items in different colors
         if (position % 2 != 0) {
-            itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cities_search_recycler_item_odd));
+            itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cities_search_recycler_item_odd))
         } else {
-            itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cities_search_recycler_item_even));
+            itemView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.cities_search_recycler_item_even))
         }
     }
 

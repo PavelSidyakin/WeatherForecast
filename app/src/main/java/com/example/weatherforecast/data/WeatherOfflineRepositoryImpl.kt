@@ -22,8 +22,7 @@ import javax.inject.Inject
 class WeatherOfflineRepositoryImpl
     @Inject
     constructor(
-        private val applicationProvider: ApplicationProvider,
-        private val dispatcherProvider: DispatcherProvider
+        private val applicationProvider: ApplicationProvider
     ) : WeatherOfflineRepository {
 
     private val weatherDb: WeatherDatabase by lazy {

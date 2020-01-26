@@ -10,6 +10,10 @@ import com.example.weatherforecast.presentation.city_weather.view.WeatherFragmen
 
 class MainActivity : AppCompatActivity() {
 
+    val weatherComponent: WeatherScreenComponent by lazy {
+        TheApplication.getAppComponent().getWeatherScreenComponent()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,12 +43,6 @@ class MainActivity : AppCompatActivity() {
             finish()
         } else {
             super.onBackPressed()
-        }
-    }
-
-    companion object {
-        val weatherComponent: WeatherScreenComponent by lazy {
-            TheApplication.getAppComponent().getWeatherScreenComponent()
         }
     }
 }

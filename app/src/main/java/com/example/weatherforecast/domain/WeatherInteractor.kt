@@ -2,7 +2,6 @@ package com.example.weatherforecast.domain
 
 import com.example.weatherforecast.domain.model.CityInfo
 import com.example.weatherforecast.domain.model.UpdateOfflineResultCode
-import java.util.Date
 
 interface WeatherInteractor {
 

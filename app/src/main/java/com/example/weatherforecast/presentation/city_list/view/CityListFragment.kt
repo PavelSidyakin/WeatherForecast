@@ -28,7 +28,7 @@ class CityListFragment : MvpAppCompatFragment(), CityListView, CityListItemClick
 
     @ProvidePresenter
     fun providePresenter(): CityListPresenter {
-        return MainActivity.weatherComponent.getCityListPresenter()
+        return (activity as MainActivity).weatherComponent.getCityListPresenter()
     }
 
     override fun openWeather() {

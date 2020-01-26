@@ -25,7 +25,7 @@ class WeatherFragment : MvpAppCompatFragment(), WeatherView {
 
     @ProvidePresenter
     fun providePresenter(): WeatherPresenter {
-        return MainActivity.weatherComponent.getWeatherPresenter()
+        return (activity as MainActivity).weatherComponent.getWeatherPresenter()
     }
 
     override fun onCreateView(
