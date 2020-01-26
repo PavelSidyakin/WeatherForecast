@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherforecast.R
-import com.example.weatherforecast.presentation.city_list.CityListViewItemData
+import com.example.weatherforecast.presentation.city_list.CityListItemData
 import kotlinx.android.synthetic.main.city_list_item.view.city_list_item_image_view_city
 import kotlinx.android.synthetic.main.city_list_item.view.city_list_item_text_view_city
 
@@ -18,7 +18,7 @@ internal class CityListItemViewHolder
         private val itemClickListener: CityListItemClickListener?
     ) : RecyclerView.ViewHolder(view) {
 
-    fun bind(cityItem: CityListViewItemData, position: Int) {
+    fun bind(cityItem: CityListItemData, position: Int) {
 
         itemView.city_list_item_text_view_city.text = cityItem.name
 

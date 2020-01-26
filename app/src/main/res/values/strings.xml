@@ -7,4 +7,6 @@
     <string name="city_list_error_general">Failed to update data. Try again later</string>
     <string name="city_list_last_update_time_format">Last update: %s</string>
 
+    <string name="weather_list_item_temperature_format">%.2f °C</string>
+
 </resources>

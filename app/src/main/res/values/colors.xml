@@ -3,4 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="cities_search_recycler_item_even">#E3F2FD</color>
+    <color name="cities_search_recycler_item_odd">#FFFDE7</color>
 </resources>

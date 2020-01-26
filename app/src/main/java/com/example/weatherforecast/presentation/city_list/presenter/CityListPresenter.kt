@@ -1,10 +1,9 @@
 package com.example.weatherforecast.presentation.city_list.presenter
 
-import com.example.weatherforecast.common.ApplicationProvider
 import com.example.weatherforecast.domain.WeatherInteractor
 import com.example.weatherforecast.domain.WeatherScreensSharedDataInteractor
 import com.example.weatherforecast.domain.model.UpdateOfflineResultCode
-import com.example.weatherforecast.presentation.city_list.CityListViewItemData
+import com.example.weatherforecast.presentation.city_list.CityListItemData
 import com.example.weatherforecast.presentation.city_list.view.CityListView
 import com.example.weatherforecast.utils.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
@@ -73,7 +72,7 @@ class CityListPresenter
     private suspend fun displaySavedData() {
         val cityList = weatherInteractor.requestAllCitiesInfo()
             .toList()
-            .map { CityListViewItemData(it.first, it.second.pictureUrl?:"") }
+            .map { CityListItemData(it.first, it.second.pictureUrl?:"") }
 
         withMainContext { viewState.updateCityList(cityList) }
 

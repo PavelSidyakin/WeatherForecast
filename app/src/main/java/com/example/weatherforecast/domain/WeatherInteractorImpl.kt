@@ -26,8 +26,12 @@ class WeatherInteractorImpl
         return weatherOfflineRepository.requestAllCitiesInfo()
     }
 
-    override suspend fun requestCityWeather(cityName: String): Map<Date, Float> {
+    override suspend fun requestCityWeather(cityName: String): Map<Long, Float> {
         return weatherOfflineRepository.requestCityWeather(cityName)
+    }
+
+    override suspend fun requestCityInfo(cityName: String): CityInfo {
+        return weatherOfflineRepository.requestCityInfo(cityName)
     }
 
     override suspend fun updateAllOfflineInfo(): UpdateOfflineResultCode {
@@ -48,6 +52,7 @@ class WeatherInteractorImpl
         ).also { resultCode ->
             if (resultCode == UpdateOfflineResultCode.OK) {
                 generalSettingsRepository.lastUpdateTime = timeProvider.currentTimeInMillis
+                weatherOfflineRepository.clearWeatherOlderThan(generalSettingsRepository.lastUpdateTime)
             }
         }
     }

@@ -8,7 +8,9 @@ interface WeatherInteractor {
 
     suspend fun requestAllCitiesInfo(): Map<String, CityInfo>
 
-    suspend fun requestCityWeather(cityName: String): Map<Date, Float>
+    suspend fun requestCityInfo(cityName: String): CityInfo
+
+    suspend fun requestCityWeather(cityName: String): Map<Long, Float>
 
     suspend fun updateAllOfflineInfo(): UpdateOfflineResultCode
 

@@ -1,6 +1,6 @@
 package com.example.weatherforecast.presentation.city_list.view
 
-import com.example.weatherforecast.presentation.city_list.CityListViewItemData
+import com.example.weatherforecast.presentation.city_list.CityListItemData
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
@@ -10,7 +10,7 @@ import moxy.viewstate.strategy.StateStrategyType
 interface CityListView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun updateCityList(cityList: List<CityListViewItemData>)
+    fun updateCityList(cityList: List<CityListItemData>)
 
     @StateStrategyType(SkipStrategy::class)
     fun clearList()
@@ -24,7 +24,7 @@ interface CityListView : MvpView {
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showProgress(show: Boolean)
 
-    @StateStrategyType(OneExecutionStateStrategy::class)
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun showLastUpdateTime(lastUpdateTime: Long)
 
     @StateStrategyType(OneExecutionStateStrategy::class)

@@ -2,9 +2,9 @@ package com.example.weatherforecast.presentation.city_list.view.recycler_view
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherforecast.presentation.city_list.CityListViewItemData
+import com.example.weatherforecast.presentation.city_list.CityListItemData
 
-internal class CityListAdapter(private val cities: List<CityListViewItemData>) : RecyclerView.Adapter<CityListItemViewHolder>() {
+internal class CityListAdapter(private val cities: List<CityListItemData>) : RecyclerView.Adapter<CityListItemViewHolder>() {
 
     var itemClickListener: CityListItemClickListener? = null
 

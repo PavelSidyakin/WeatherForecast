@@ -17,7 +17,6 @@ import com.example.weatherforecast.domain.model.CityWeather
 import com.example.weatherforecast.domain.model.data.WeatherOfflineSaveResultCode
 import com.example.weatherforecast.utils.DispatcherProvider
 import com.example.weatherforecast.utils.logs.log
-import java.util.Date
 import javax.inject.Inject
 
 class WeatherOfflineRepositoryImpl
@@ -42,12 +41,16 @@ class WeatherOfflineRepositoryImpl
         })
     }
 
-    override suspend fun requestCityWeather(cityName: String): Map<Date, Float> {
+    override suspend fun requestCityWeather(cityName: String): Map<Long, Float> {
         return weatherDb.weatherDao().dbRequestCityWeather(cityName).associateBy({ dbCityWeather ->
-            Date(dbCityWeather.time)
+            dbCityWeather.time
         }, { dbCityWeather ->
             dbCityWeather.temperature
         })
+    }
+
+    override suspend fun requestCityInfo(cityName: String): CityInfo {
+        return weatherDb.weatherDao().dbRequestCityInfo(cityName).let { CityInfo(it.pictureUrl) }
     }
 
     override suspend fun saveCitiesInfo(citiesInfo: Map<String, CityInfo>): WeatherOfflineSaveResultCode {
@@ -94,8 +97,8 @@ class WeatherOfflineRepositoryImpl
         weatherDb.clearAllTables()
     }
 
-    override suspend fun clearWeatherOlderThan(date: Date) {
-        weatherDb.weatherDao().dbDeleteWeatherOlderThan(date.time)
+    override suspend fun clearWeatherOlderThan(time: Long) {
+        weatherDb.weatherDao().dbDeleteWeatherOlderThan(time)
     }
 
     private suspend fun insertToDbWithResult(block: suspend WeatherDao.() -> Unit): WeatherOfflineSaveResultCode {
@@ -119,6 +122,11 @@ class WeatherOfflineRepositoryImpl
             FROM t_city_info
             ORDER BY f_city_name""")
         suspend fun dbRequestAllCitiesInfo(): List<DbCityInfo>
+
+        @Query("""SELECT * 
+            FROM t_city_info
+            WHERE f_city_name = :cityName""")
+        suspend fun dbRequestCityInfo(cityName: String): DbCityInfo
 
         @Query("""SELECT * 
             FROM t_city_weather 

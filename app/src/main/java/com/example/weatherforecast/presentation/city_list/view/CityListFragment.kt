@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.weatherforecast.R
 import com.example.weatherforecast.presentation.MainActivity
-import com.example.weatherforecast.presentation.city_list.CityListViewItemData
+import com.example.weatherforecast.presentation.city_list.CityListItemData
 import com.example.weatherforecast.presentation.city_list.presenter.CityListPresenter
 import com.example.weatherforecast.presentation.city_list.view.recycler_view.CityListAdapter
 import com.example.weatherforecast.presentation.city_list.view.recycler_view.CityListItemClickListener
@@ -54,7 +54,7 @@ class CityListFragment : MvpAppCompatFragment(), CityListView, CityListItemClick
             SimpleDateFormat.getInstance().format(Date(lastUpdateTime)))
     }
 
-    override fun updateCityList(cityList: List<CityListViewItemData>) {
+    override fun updateCityList(cityList: List<CityListItemData>) {
         val adapter = CityListAdapter(cityList)
         adapter.itemClickListener = this
 
@@ -90,7 +90,12 @@ class CityListFragment : MvpAppCompatFragment(), CityListView, CityListItemClick
         city_list_progress.visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 
-    override fun onItemClicked(position: Int, cityListViewItemData: CityListViewItemData) {
-        presenter.onCityClicked(cityListViewItemData.name)
+    override fun onItemClicked(position: Int, cityListItemData: CityListItemData) {
+        presenter.onCityClicked(cityListItemData.name)
     }
+
+    companion object {
+        const val FRAGMENT_TAG = "CityListFragment"
+    }
+
 }
