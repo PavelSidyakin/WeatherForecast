@@ -15,6 +15,7 @@ import com.example.weatherforecast.common.ApplicationProvider
 import com.example.weatherforecast.domain.WeatherOfflineRepository
 import com.example.weatherforecast.domain.model.CityInfo
 import com.example.weatherforecast.domain.model.CityWeather
+import com.example.weatherforecast.domain.model.data.WeatherOfflineSaveResultCode
 import com.example.weatherforecast.utils.DispatcherProvider
 import com.example.weatherforecast.utils.logs.log
 import kotlinx.coroutines.withContext
@@ -66,7 +67,7 @@ class WeatherOfflineRepositoryImpl
         })
     }
 
-    override suspend fun saveCitiesInfo(citiesInfo: Map<String, CityInfo>) {
+    override suspend fun saveCitiesInfo(citiesInfo: Map<String, CityInfo>): WeatherOfflineSaveResultCode {
         val dbCitiesInfos: MutableList<DbCityInfo> = mutableListOf()
 
         citiesInfo.forEach { entry ->
@@ -77,14 +78,18 @@ class WeatherOfflineRepositoryImpl
                 savePictureToFile(cityName, cityInfo.pictureBytes)
             }
 
-            dbCitiesInfos.add(DbCityInfo(cityName, picturePath?.absolutePath?:""))
+            val dbCityInfo = DbCityInfo(cityName, picturePath?.absolutePath?:"")
+            dbCitiesInfos.add(dbCityInfo)
+
+
+            log { i(TAG, "WeatherOfflineRepositoryImpl.saveCitiesInfo(). $dbCityInfo") }
         }
 
-        weatherDb.weatherDao().dbInsertCitiesInfos(dbCitiesInfos)
+        return insertToDbWithResult { dbInsertCitiesInfos(dbCitiesInfos) }
     }
 
-    override suspend fun saveCitiesWeather(citiesWeather: Map<String, CityWeather>) {
-        weatherDb.weatherDao().dbInsertCitiesWeather(citiesWeather.toList()
+    override suspend fun saveCitiesWeather(citiesWeather: Map<String, CityWeather>): WeatherOfflineSaveResultCode {
+        val cdbCitiesWeather: List<DbCityWeather> = citiesWeather.toList()
             .map { entry ->
                 val cityName = entry.first
                 val cityWeather = entry.second
@@ -94,11 +99,29 @@ class WeatherOfflineRepositoryImpl
                         log { i(TAG, "WeatherOfflineRepositoryImpl.saveCitiesWeather(). $it") }
                     }
             }.flatten()
-        )
+
+        return insertToDbWithResult { dbInsertCitiesWeather(cdbCitiesWeather) }
+    }
+
+    override suspend fun clearAllData() {
+        withContext(dispatcherProvider.io()) {
+            weatherDb.clearAllTables()
+
+            File(picturesDir).deleteRecursively()
+        }
     }
 
     override suspend fun clearWeatherOlderThan(date: Date) {
         weatherDb.weatherDao().dbDeleteWeatherOlderThan(date.time)
+    }
+
+    private suspend fun insertToDbWithResult(block: suspend WeatherDao.() -> Unit): WeatherOfflineSaveResultCode {
+        return try {
+            weatherDb.weatherDao().block()
+            WeatherOfflineSaveResultCode.OK
+        } catch (exception: Exception) {
+            WeatherOfflineSaveResultCode.ERROR
+        }
     }
 
     private suspend fun savePictureToFile(cityName: String, pictureBytes: ByteArray): File {
@@ -118,22 +141,20 @@ class WeatherOfflineRepositoryImpl
     interface WeatherDao {
 
         @Query("""SELECT * 
-            FROM t_city_info""")
+            FROM t_city_info
+            ORDER BY f_city_name""")
         suspend fun dbRequestAllCitiesInfo(): List<DbCityInfo>
 
         @Query("""SELECT * 
             FROM t_city_weather 
-            WHERE f_city_name = :cityName""")
+            WHERE f_city_name = :cityName
+            ORDER BY f_time""")
         suspend fun dbRequestCityWeather(cityName: String): List<DbCityWeather>
 
-        @Query("""SELECT * 
-            FROM t_city_weather""")
-        suspend fun dbRequestAllCitiesWeather(): List<DbCityWeather>
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        suspend fun dbInsertCitiesInfos(citiesInfo: List<DbCityInfo>)
 
-        @Insert(onConflict = OnConflictStrategy.IGNORE)
-        suspend fun dbInsertCitiesInfos(citiesInfos: List<DbCityInfo>)
-
-        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
         suspend fun dbInsertCitiesWeather(citiesWeather: List<DbCityWeather>)
 
         @Query("DELETE FROM t_city_weather WHERE f_time < :time")
