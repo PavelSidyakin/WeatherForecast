@@ -37,7 +37,7 @@ internal class WeatherInteractorImplTest {
     private lateinit var timeProvider: TimeProvider
 
     private val generalSettingsRepository: GeneralSettingsRepository = object : GeneralSettingsRepository {
-        override var lastUpdateTime: Long = 0L
+        override var lastUpdateTimeMillis: Long = 0L
     }
 
     private lateinit var weatherInteractor: WeatherInteractorImpl
@@ -139,7 +139,7 @@ internal class WeatherInteractorImplTest {
     @Test
     fun `When getLastUpdateTime() is called, should return value from settings`() {
         val lastUpdateTimeTestVal = 2222L
-        generalSettingsRepository.lastUpdateTime = lastUpdateTimeTestVal
+        generalSettingsRepository.lastUpdateTimeMillis = lastUpdateTimeTestVal
 
         // action
         val lastUpdateTime = weatherInteractor.getLastUpdateTime()
@@ -221,7 +221,7 @@ internal class WeatherInteractorImplTest {
 
         @BeforeEach
         fun beforeEachTest() {
-            generalSettingsRepository.lastUpdateTime = prevLastUpdateTime
+            generalSettingsRepository.lastUpdateTimeMillis = prevLastUpdateTime
             // when
             runBlocking {
                 whenever(weatherOfflineRepository.saveCitiesInfo(any())).thenReturn(WeatherOfflineSaveResultCode.OK)

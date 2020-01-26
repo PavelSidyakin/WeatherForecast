@@ -50,14 +50,14 @@ class WeatherInteractorImpl
             }
         ).also { resultCode ->
             if (resultCode == UpdateOfflineResultCode.OK) {
-                generalSettingsRepository.lastUpdateTime = timeProvider.currentTimeInMillis
-                weatherOfflineRepository.clearWeatherOlderThan(generalSettingsRepository.lastUpdateTime)
+                generalSettingsRepository.lastUpdateTimeMillis = timeProvider.currentTimeInMillis
+                weatherOfflineRepository.clearWeatherOlderThan(generalSettingsRepository.lastUpdateTimeMillis)
             }
         }
     }
 
     override fun getLastUpdateTime(): Long {
-        return generalSettingsRepository.lastUpdateTime
+        return generalSettingsRepository.lastUpdateTimeMillis
     }
 
     private suspend fun saveOffline(

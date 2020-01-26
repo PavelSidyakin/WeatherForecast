@@ -15,7 +15,6 @@ import com.example.weatherforecast.domain.WeatherOfflineRepository
 import com.example.weatherforecast.domain.model.CityInfo
 import com.example.weatherforecast.domain.model.CityWeather
 import com.example.weatherforecast.domain.model.data.WeatherOfflineSaveResultCode
-import com.example.weatherforecast.utils.DispatcherProvider
 import com.example.weatherforecast.utils.logs.log
 import javax.inject.Inject
 

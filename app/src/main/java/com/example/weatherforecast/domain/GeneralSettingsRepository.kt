@@ -2,6 +2,9 @@ package com.example.weatherforecast.domain
 
 interface GeneralSettingsRepository {
 
-    var lastUpdateTime: Long
+    /**
+     * Returns or sets last update in milliseconds
+     */
+    var lastUpdateTimeMillis: Long
 
 }

@@ -14,12 +14,11 @@ class GeneralSettingsRepositoryImpl
         applicationProvider.applicationContext.getSharedPreferences("general", Context.MODE_PRIVATE)
     }
 
-    override var lastUpdateTime: Long
+    override var lastUpdateTimeMillis: Long
         get() = generalSharedPreferences.getLong(LAST_UPDATE_TIME_SETTING, 0)
         set(value) { generalSharedPreferences.edit().putLong(LAST_UPDATE_TIME_SETTING, value).apply() }
 
     private companion object {
         const val LAST_UPDATE_TIME_SETTING = "lastUpdateTime"
     }
-
 }
