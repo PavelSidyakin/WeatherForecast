@@ -8,7 +8,6 @@ import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestDataIte
 import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResult
 import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResultCode
 import com.example.weatherforecast.utils.logs.log
-import java.util.Date
 import javax.inject.Inject
 
 class WeatherInteractorImpl

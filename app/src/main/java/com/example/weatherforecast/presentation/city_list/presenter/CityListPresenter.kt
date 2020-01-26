@@ -57,7 +57,9 @@ class CityListPresenter
                 withMainContext { viewState.showGeneralError(true) }
             }
 
-            displaySavedData()
+            if (updateOfflineResultCode == UpdateOfflineResultCode.OK) {
+                displaySavedData()
+            }
 
             withMainContext { viewState.showProgress(false) }
         }
