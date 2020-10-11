@@ -1,2 +1,6 @@
+include ':feature:weather_details'
+include ':common'
+include ':module_injector'
+include ':feature:city_list'
 include ':app'
 rootProject.name='Weather Forecast'

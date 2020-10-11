@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="city_list_button_update">Update</string>
+
+    <string name="city_list_error_no_network">Failed to update data. Check network connection and try again</string>
+    <string name="city_list_error_general">Failed to update data. Try again later</string>
+    <string name="city_list_last_update_time_format">Last update: %s</string>
+
+</resources>

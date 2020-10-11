@@ -3,8 +3,6 @@ package com.example.weatherforecast.di.weather
 import com.example.weatherforecast.data.WeatherOfflineRepositoryImpl
 import com.example.weatherforecast.data.WeatherOnlineRepositoryImpl
 import com.example.weatherforecast.di.WeatherScope
-import com.example.weatherforecast.domain.WeatherInteractor
-import com.example.weatherforecast.domain.WeatherInteractorImpl
 import com.example.weatherforecast.domain.WeatherOfflineRepository
 import com.example.weatherforecast.domain.WeatherOnlineRepository
 import com.example.weatherforecast.domain.WeatherScreensSharedDataInteractor

@@ -1,7 +1,6 @@
 package com.example.weatherforecast.presentation.city_list.presenter
 
 import com.example.weatherforecast.DispatcherProviderStub
-import com.example.weatherforecast.domain.WeatherInteractor
 import com.example.weatherforecast.domain.WeatherScreensSharedDataInteractor
 import com.example.weatherforecast.domain.model.CityInfo
 import com.example.weatherforecast.domain.model.UpdateOfflineResultCode
