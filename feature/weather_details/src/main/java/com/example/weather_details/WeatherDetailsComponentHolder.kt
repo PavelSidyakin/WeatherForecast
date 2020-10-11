@@ -4,35 +4,25 @@ import com.example.common.coroutine_utils.DispatcherProvider
 import com.example.module_injector.BaseAPI
 import com.example.module_injector.BaseDependencies
 import com.example.module_injector.ComponentHolder
+import com.example.module_injector.ComponentHolderDelegate
 import com.example.weather_details.di.WeatherDetailsComponent
 import com.example.weather_details.domain.WeatherDetailsRepository
-import java.lang.ref.WeakReference
 
 object WeatherDetailsComponentHolder : ComponentHolder<WeatherDetailsApi, WeatherDetailsDependencies> {
 
-    private var componentRef: WeakReference<WeatherDetailsComponent>? = null
-
-    override var dependencyProvider: (() -> WeatherDetailsDependencies)? = null
-
-    internal fun getComponent(): WeatherDetailsComponent {
-        var component: WeatherDetailsComponent? = null
-
-        synchronized(this) {
-            dependencyProvider?.let { dependencyProvider ->
-                if (componentRef?.get() == null) {
-                    componentRef =
-                        WeakReference(WeatherDetailsComponent.initAndGet(dependencyProvider()))
-                }
-                component = componentRef?.get()
-            } ?: throw IllegalStateException("dependencyProvider is not initialized")
-        }
-
-        return component ?: throw IllegalStateException("Component is not initialized")
+    private val componentHolderDelegate = ComponentHolderDelegate<
+            WeatherDetailsApi,
+            WeatherDetailsDependencies,
+            WeatherDetailsComponent> { dependencies: WeatherDetailsDependencies ->
+        WeatherDetailsComponent.initAndGet(dependencies)
     }
 
-    override fun get(): WeatherDetailsApi {
-        return getComponent()
-    }
+    internal fun getComponent(): WeatherDetailsComponent = componentHolderDelegate.getComponentImpl()
+
+    override var dependencyProvider: (() -> WeatherDetailsDependencies)? by componentHolderDelegate::dependencyProvider
+
+    override fun get(): WeatherDetailsApi = componentHolderDelegate.get()
+    
 }
 
 interface WeatherDetailsDependencies : BaseDependencies {

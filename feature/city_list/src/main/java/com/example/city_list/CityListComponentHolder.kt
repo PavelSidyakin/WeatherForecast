@@ -9,33 +9,21 @@ import com.example.common.time_utils.TimeProvider
 import com.example.module_injector.BaseAPI
 import com.example.module_injector.BaseDependencies
 import com.example.module_injector.ComponentHolder
-import java.lang.ref.WeakReference
+import com.example.module_injector.ComponentHolderDelegate
 
 object CityListComponentHolder : ComponentHolder<CityListApi, CityListDependencies> {
-
-    private var componentRef: WeakReference<CityListComponent>? = null
-
-    override var dependencyProvider: (() -> CityListDependencies)? = null
-
-    internal fun getComponent(): CityListComponent {
-        var component: CityListComponent? = null
-
-        synchronized(this) {
-            dependencyProvider?.let { dependencyProvider ->
-                if (componentRef?.get() == null) {
-                    componentRef =
-                        WeakReference(CityListComponent.initAndGet(dependencyProvider()))
-                }
-                component = componentRef?.get()
-            } ?: throw IllegalStateException("dependencyProvider is not initialized")
-        }
-
-        return component ?: throw IllegalStateException("Component is not initialized")
+    private val componentHolderDelegate = ComponentHolderDelegate<
+            CityListApi,
+            CityListDependencies,
+            CityListComponent> { dependencies: CityListDependencies ->
+        CityListComponent.initAndGet(dependencies)
     }
 
-    override fun get(): CityListApi {
-        return getComponent()
-    }
+    internal fun getComponent(): CityListComponent = componentHolderDelegate.getComponentImpl()
+
+    override var dependencyProvider: (() -> CityListDependencies)? by componentHolderDelegate::dependencyProvider
+
+    override fun get(): CityListApi = componentHolderDelegate.get()
 }
 
 interface CityListDependencies : BaseDependencies {

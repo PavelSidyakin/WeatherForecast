@@ -7,33 +7,21 @@ import com.example.common.time_utils.TimeProvider
 import com.example.module_injector.BaseAPI
 import com.example.module_injector.BaseDependencies
 import com.example.module_injector.ComponentHolder
-import java.lang.ref.WeakReference
+import com.example.module_injector.ComponentHolderDelegate
 
 object CommonComponentHolder : ComponentHolder<CommonApi, CommonDependencies> {
-
-    private var componentRef: WeakReference<CommonComponent>? = null
-
-    override var dependencyProvider: (() -> CommonDependencies)? = null
-
-    internal fun getComponent(): CommonComponent {
-        var component: CommonComponent? = null
-
-        synchronized(this) {
-            dependencyProvider?.let { dependencyProvider ->
-                if (componentRef?.get() == null) {
-                    componentRef =
-                        WeakReference(CommonComponent.initAndGet(dependencyProvider()))
-                }
-                component = componentRef?.get()
-            } ?: throw IllegalStateException("dependencyProvider is not initialized")
-        }
-
-        return component ?: throw IllegalStateException("Component is not initialized")
+    private val componentHolderDelegate = ComponentHolderDelegate<
+            CommonApi,
+            CommonDependencies,
+            CommonComponent> { dependencies: CommonDependencies ->
+        CommonComponent.initAndGet(dependencies)
     }
 
-    override fun get(): CommonApi {
-        return getComponent()
-    }
+    internal fun getComponent(): CommonComponent = componentHolderDelegate.getComponentImpl()
+
+    override var dependencyProvider: (() -> CommonDependencies)? by componentHolderDelegate::dependencyProvider
+
+    override fun get(): CommonApi = componentHolderDelegate.get()
 }
 
 interface CommonDependencies : BaseDependencies {
