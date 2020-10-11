@@ -38,12 +38,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation project(path: ':common')
+    implementation project(path: ':module_injector')
+    implementation project(path: ':feature:main_screen')
+    implementation project(path: ':feature:city_list')
+    implementation project(path: ':feature:weather_details')
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    implementation 'com.github.moxy-community:moxy-androidx:2.1.2'
-    kapt 'com.github.moxy-community:moxy-compiler:2.0.2'
+    implementation 'com.github.moxy-community:moxy-androidx:2.2.0'
+    kapt 'com.github.moxy-community:moxy-compiler:2.2.0'
 
     implementation("com.squareup.retrofit2:retrofit:2.7.1")
     implementation 'com.google.code.gson:gson:2.8.6'

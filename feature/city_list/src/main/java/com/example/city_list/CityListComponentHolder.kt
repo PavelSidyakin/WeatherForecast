@@ -13,19 +13,28 @@ import java.lang.ref.WeakReference
 
 object CityListComponentHolder : ComponentHolder<CityListApi, CityListDependencies> {
 
-    internal lateinit var componentRef: WeakReference<CityListComponent>
+    private var componentRef: WeakReference<CityListComponent>? = null
 
-    override fun get(dependencyProvider: () -> CityListDependencies): CityListApi {
-        var component: CityListComponent?
+    override var dependencyProvider: (() -> CityListDependencies)? = null
+
+    internal fun getComponent(): CityListComponent {
+        var component: CityListComponent? = null
 
         synchronized(this) {
-            if (componentRef.get() == null) {
-                componentRef = WeakReference(CityListComponent.initAndGet(dependencyProvider()))
-            }
-            component = componentRef.get()
+            dependencyProvider?.let { dependencyProvider ->
+                if (componentRef?.get() == null) {
+                    componentRef =
+                        WeakReference(CityListComponent.initAndGet(dependencyProvider()))
+                }
+                component = componentRef?.get()
+            } ?: throw IllegalStateException("dependencyProvider is not initialized")
         }
 
         return component ?: throw IllegalStateException("Component is not initialized")
+    }
+
+    override fun get(): CityListApi {
+        return getComponent()
     }
 }
 

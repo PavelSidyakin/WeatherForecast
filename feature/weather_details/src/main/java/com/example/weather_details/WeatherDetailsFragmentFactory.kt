@@ -1,7 +1,7 @@
 package com.example.weather_details
 
-import androidx.fragment.app.Fragment
+import com.example.weather_details.presentation.city_weather.view.WeatherDetailsFragment
 
 interface WeatherDetailsFragmentFactory {
-    fun createWeatherDetailsFragment(cityName: String): Fragment
+    fun createWeatherDetailsFragment(cityName: String): WeatherDetailsFragment
 }

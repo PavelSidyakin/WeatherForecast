@@ -3,7 +3,7 @@ package com.example.city_list.domain
 import com.example.city_list.models.UpdateOfflineResultCode
 import com.example.common.models.CityInfo
 
-interface WeatherInteractor {
+internal interface WeatherInteractor {
 
     /**
      * Requests all cities info in offline storage.

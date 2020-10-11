@@ -11,19 +11,28 @@ import java.lang.ref.WeakReference
 
 object CommonComponentHolder : ComponentHolder<CommonApi, CommonDependencies> {
 
-    internal lateinit var commonComponentRef: WeakReference<CommonComponent>
+    private var componentRef: WeakReference<CommonComponent>? = null
 
-    override fun get(dependencyProvider: () -> CommonDependencies): CommonApi {
-        var commonComponent: CommonComponent?
+    override var dependencyProvider: (() -> CommonDependencies)? = null
+
+    internal fun getComponent(): CommonComponent {
+        var component: CommonComponent? = null
 
         synchronized(this) {
-            if (commonComponentRef.get() == null) {
-                commonComponentRef = WeakReference(CommonComponent.initAndGet(dependencyProvider()))
-            }
-            commonComponent = commonComponentRef.get()
+            dependencyProvider?.let { dependencyProvider ->
+                if (componentRef?.get() == null) {
+                    componentRef =
+                        WeakReference(CommonComponent.initAndGet(dependencyProvider()))
+                }
+                component = componentRef?.get()
+            } ?: throw IllegalStateException("dependencyProvider is not initialized")
         }
 
-        return commonComponent ?: throw IllegalStateException("Component is not initialized")
+        return component ?: throw IllegalStateException("Component is not initialized")
+    }
+
+    override fun get(): CommonApi {
+        return getComponent()
     }
 }
 

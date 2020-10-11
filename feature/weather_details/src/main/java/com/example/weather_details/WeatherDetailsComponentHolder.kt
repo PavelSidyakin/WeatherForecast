@@ -10,19 +10,28 @@ import java.lang.ref.WeakReference
 
 object WeatherDetailsComponentHolder : ComponentHolder<WeatherDetailsApi, WeatherDetailsDependencies> {
 
-    internal lateinit var componentRef: WeakReference<WeatherDetailsComponent>
+    private var componentRef: WeakReference<WeatherDetailsComponent>? = null
 
-    override fun get(dependencyProvider: () -> WeatherDetailsDependencies): WeatherDetailsApi {
-        var component: WeatherDetailsComponent?
+    override var dependencyProvider: (() -> WeatherDetailsDependencies)? = null
+
+    internal fun getComponent(): WeatherDetailsComponent {
+        var component: WeatherDetailsComponent? = null
 
         synchronized(this) {
-            if (componentRef.get() == null) {
-                componentRef = WeakReference(WeatherDetailsComponent.initAndGet(dependencyProvider()))
-            }
-            component = componentRef.get()
+            dependencyProvider?.let { dependencyProvider ->
+                if (componentRef?.get() == null) {
+                    componentRef =
+                        WeakReference(WeatherDetailsComponent.initAndGet(dependencyProvider()))
+                }
+                component = componentRef?.get()
+            } ?: throw IllegalStateException("dependencyProvider is not initialized")
         }
 
         return component ?: throw IllegalStateException("Component is not initialized")
+    }
+
+    override fun get(): WeatherDetailsApi {
+        return getComponent()
     }
 }
 

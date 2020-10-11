@@ -24,11 +24,11 @@ import java.util.Date
 class CityListFragment : MvpAppCompatFragment(), CityListView, CityListItemClickListener {
 
     @InjectPresenter
-    lateinit var presenter: CityListPresenter
+    internal lateinit var presenter: CityListPresenter
 
     @ProvidePresenter
-    fun providePresenter(): CityListPresenter {
-        return CityListComponentHolder.componentRef.get()!!.cityListPresenter
+    internal fun providePresenter(): CityListPresenter {
+        return CityListComponentHolder.getComponent().cityListPresenter
     }
 
     override fun onCreateView(

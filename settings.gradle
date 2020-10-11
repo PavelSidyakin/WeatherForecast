@@ -1,3 +1,4 @@
+include ':feature:main_screen'
 include ':feature:weather_details'
 include ':common'
 include ':module_injector'

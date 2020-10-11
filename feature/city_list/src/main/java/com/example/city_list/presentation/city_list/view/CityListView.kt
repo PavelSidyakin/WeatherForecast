@@ -7,7 +7,7 @@ import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.SkipStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
-interface CityListView : MvpView {
+internal interface CityListView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun updateCityList(cityList: List<CityListItemData>)

@@ -3,7 +3,7 @@ package com.example.weather_details.domain
 import com.example.common.models.CityInfo
 import javax.inject.Inject
 
-class WeatherDetailsInteractorImpl @Inject constructor(
+internal class WeatherDetailsInteractorImpl @Inject constructor(
     private val weatherDetailsRepository: WeatherDetailsRepository,
 ) : WeatherDetailsInteractor {
 

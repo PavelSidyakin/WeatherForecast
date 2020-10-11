@@ -5,4 +5,4 @@ import dagger.Module
 
 @AssistedModule
 @Module(includes = [AssistedInject_WeatherDetailsAssistedModule::class])
-interface WeatherDetailsAssistedModule
+internal interface WeatherDetailsAssistedModule

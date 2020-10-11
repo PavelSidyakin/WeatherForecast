@@ -6,7 +6,7 @@ object XLog {
     private var enabled = true
 
     private val logger: Logger? by lazy {
-        CommonComponentHolder.commonComponentRef.get()?.logger
+        CommonComponentHolder.getComponent().logger
     }
 
     fun enableLogging(enable: Boolean) {

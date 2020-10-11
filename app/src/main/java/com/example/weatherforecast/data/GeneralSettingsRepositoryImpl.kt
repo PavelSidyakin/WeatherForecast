@@ -1,8 +1,8 @@
 package com.example.weatherforecast.data
 
 import android.content.Context
+import com.example.city_list.domain.GeneralSettingsRepository
 import com.example.weatherforecast.common.ApplicationProvider
-import com.example.weatherforecast.domain.GeneralSettingsRepository
 import javax.inject.Inject
 
 class GeneralSettingsRepositoryImpl

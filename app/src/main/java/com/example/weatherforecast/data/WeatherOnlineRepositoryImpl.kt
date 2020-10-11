@@ -1,10 +1,10 @@
 package com.example.weatherforecast.data
 
-import com.example.weatherforecast.domain.WeatherOnlineRepository
-import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResult
-import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestResultCode
-import com.example.weatherforecast.domain.model.data.WeatherOnlineRequestDataItem
-import com.example.weatherforecast.utils.logs.log
+import com.example.city_list.domain.WeatherOnlineRepository
+import com.example.city_list.models.data.WeatherOnlineRequestDataItem
+import com.example.city_list.models.data.WeatherOnlineRequestResult
+import com.example.city_list.models.data.WeatherOnlineRequestResultCode
+import com.example.common.logs.log
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -13,10 +13,9 @@ import retrofit2.http.GET
 import java.io.IOException
 import javax.inject.Inject
 
-class WeatherOnlineRepositoryImpl
+class WeatherOnlineRepositoryImpl @Inject constructor(
 
-    @Inject
-    constructor() : WeatherOnlineRepository {
+) : WeatherOnlineRepository {
 
     private val retrofit: Retrofit by lazy { createRetrofit() }
 
@@ -26,12 +25,27 @@ class WeatherOnlineRepositoryImpl
 
             val weatherOnlineRequestResultData = weatherService.requestWeather()
 
-            WeatherOnlineRequestResult(WeatherOnlineRequestResultCode.OK, weatherOnlineRequestResultData)
+            WeatherOnlineRequestResult(
+                WeatherOnlineRequestResultCode.OK,
+                weatherOnlineRequestResultData
+            )
         } catch (ioException: IOException) {
-            log { w(TAG, "WeatherOnlineRepositoryImpl.requestWeatherForecast(). Failed", ioException) }
+            log {
+                w(
+                    TAG,
+                    "WeatherOnlineRepositoryImpl.requestWeatherForecast(). Failed",
+                    ioException
+                )
+            }
             WeatherOnlineRequestResult(WeatherOnlineRequestResultCode.NO_NETWORK, null)
         } catch (exception: Exception) {
-            log { w(TAG, "WeatherOnlineRepositoryImpl.requestWeatherForecast(). Failed", exception) }
+            log {
+                w(
+                    TAG,
+                    "WeatherOnlineRepositoryImpl.requestWeatherForecast(). Failed",
+                    exception
+                )
+            }
             WeatherOnlineRequestResult(WeatherOnlineRequestResultCode.GENERAL_ERROR, null)
         }.also {
             log { i(TAG, "WeatherOnlineRepositoryImpl.requestWeatherForecast(). Result = $it") }

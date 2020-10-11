@@ -2,7 +2,7 @@ package com.example.weather_details.domain
 
 import com.example.common.models.CityInfo
 
-interface WeatherDetailsInteractor {
+internal interface WeatherDetailsInteractor {
     /**
      * Requests city weather.
      *

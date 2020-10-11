@@ -1,7 +1,7 @@
 package com.example.city_list
 
-import androidx.fragment.app.Fragment
+import com.example.city_list.presentation.city_list.view.CityListFragment
 
 interface CityListFragmentFactory {
-    fun createCityListFragment(): Fragment
+    fun createCityListFragment(): CityListFragment
 }

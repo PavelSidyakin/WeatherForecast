@@ -5,7 +5,7 @@ import moxy.MvpView
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
-interface WeatherView: MvpView {
+internal interface WeatherView: MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showCityHeader(name: String)

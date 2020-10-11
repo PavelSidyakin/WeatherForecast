@@ -21,11 +21,11 @@ import moxy.presenter.ProvidePresenter
 class WeatherDetailsFragment(private val cityName: String) : MvpAppCompatFragment(), WeatherView {
 
     @InjectPresenter
-    lateinit var presenter: WeatherDetailsPresenter
+    internal lateinit var presenter: WeatherDetailsPresenter
 
     @ProvidePresenter
-    fun providePresenter(): WeatherDetailsPresenter {
-        return WeatherDetailsComponentHolder.componentRef.get()!!.weatherDetailsPresenterFactory.create(cityName)
+    internal fun providePresenter(): WeatherDetailsPresenter {
+        return WeatherDetailsComponentHolder.getComponent().weatherDetailsPresenterFactory.create(cityName)
     }
 
     override fun onCreateView(

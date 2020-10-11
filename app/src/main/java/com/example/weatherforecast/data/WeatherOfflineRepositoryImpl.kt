@@ -10,19 +10,20 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.city_list.domain.WeatherOfflineRepository
+import com.example.city_list.models.data.WeatherOfflineSaveResultCode
+import com.example.common.logs.log
+import com.example.common.models.CityInfo
+import com.example.common.models.CityWeather
+import com.example.weather_details.domain.WeatherDetailsRepository
 import com.example.weatherforecast.common.ApplicationProvider
-import com.example.weatherforecast.domain.WeatherOfflineRepository
-import com.example.weatherforecast.domain.model.CityInfo
-import com.example.weatherforecast.domain.model.CityWeather
-import com.example.weatherforecast.domain.model.data.WeatherOfflineSaveResultCode
-import com.example.weatherforecast.utils.logs.log
 import javax.inject.Inject
 
 class WeatherOfflineRepositoryImpl
     @Inject
     constructor(
         private val applicationProvider: ApplicationProvider
-    ) : WeatherOfflineRepository {
+    ) : WeatherOfflineRepository, WeatherDetailsRepository {
 
     private val weatherDb: WeatherDatabase by lazy {
         Room.databaseBuilder(

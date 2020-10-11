@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CityListObserverImpl @Inject constructor(
+internal class CityListObserverImpl @Inject constructor(
 ) : CityListMonitor, CityListUpdater {
 
     private val channel = Channel<String>(1)
