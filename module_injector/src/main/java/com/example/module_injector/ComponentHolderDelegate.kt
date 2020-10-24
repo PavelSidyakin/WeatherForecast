@@ -8,17 +8,17 @@ class ComponentHolderDelegate<A : BaseAPI, D : BaseDependencies, C : A>(
 
     override var dependencyProvider: (() -> D)? = null
 
-    private var componentWrapperRef: WeakReference<C>? = null
+    private var componentWeakRef: WeakReference<C>? = null
 
     fun getComponentImpl(): C {
         var component: C? = null
 
         synchronized(this) {
             dependencyProvider?.let { dependencyProvider ->
-                component = componentWrapperRef?.get()
+                component = componentWeakRef?.get()
                 if (component == null) {
                     component = componentFactory(dependencyProvider())
-                    componentWrapperRef = WeakReference(component)
+                    componentWeakRef = WeakReference(component)
                 }
             } ?: throw IllegalStateException("dependencyProvider for component with factory $componentFactory is not initialized")
         }
