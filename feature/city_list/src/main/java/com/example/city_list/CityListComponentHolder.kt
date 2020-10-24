@@ -6,27 +6,27 @@ import com.example.city_list.domain.WeatherOfflineRepository
 import com.example.city_list.domain.WeatherOnlineRepository
 import com.example.common.coroutine_utils.DispatcherProvider
 import com.example.common.time_utils.TimeProvider
-import com.example.module_injector.BaseAPI
-import com.example.module_injector.BaseDependencies
+import com.example.module_injector.BaseFeatureAPI
+import com.example.module_injector.BaseFeatureDependencies
 import com.example.module_injector.ComponentHolder
 import com.example.module_injector.ComponentHolderDelegate
 
-object CityListComponentHolder : ComponentHolder<CityListApi, CityListDependencies> {
+object CityListComponentHolder : ComponentHolder<CityListFeatureApi, CityListFeatureDependencies> {
     private val componentHolderDelegate = ComponentHolderDelegate<
-            CityListApi,
-            CityListDependencies,
-            CityListComponent> { dependencies: CityListDependencies ->
+            CityListFeatureApi,
+            CityListFeatureDependencies,
+            CityListComponent> { dependencies: CityListFeatureDependencies ->
         CityListComponent.initAndGet(dependencies)
     }
 
     internal fun getComponent(): CityListComponent = componentHolderDelegate.getComponentImpl()
 
-    override var dependencyProvider: (() -> CityListDependencies)? by componentHolderDelegate::dependencyProvider
+    override var dependencyProvider: (() -> CityListFeatureDependencies)? by componentHolderDelegate::dependencyProvider
 
-    override fun get(): CityListApi = componentHolderDelegate.get()
+    override fun get(): CityListFeatureApi = componentHolderDelegate.get()
 }
 
-interface CityListDependencies : BaseDependencies {
+interface CityListFeatureDependencies : BaseFeatureDependencies {
     val dispatcherProvider: DispatcherProvider
     val timeProvider: TimeProvider
 
@@ -36,7 +36,7 @@ interface CityListDependencies : BaseDependencies {
     val weatherOnlineRepository: WeatherOnlineRepository
 }
 
-interface CityListApi : BaseAPI {
+interface CityListFeatureApi : BaseFeatureAPI {
     val cityListFragmentFactory: CityListFragmentFactory
     val cityListMonitor: CityListMonitor
 }

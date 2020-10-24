@@ -5,11 +5,11 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Component(
-    dependencies = [AppDependencies::class],
+    dependencies = [AppFeatureDependencies::class],
     modules = [ AppModule::class ]
 )
 @Singleton
-interface AppComponent : AppApi {
+interface AppComponent : AppFeatureApi {
     fun inject(theApplication: TheApplication)
 
     interface Builder {
@@ -17,9 +17,9 @@ interface AppComponent : AppApi {
     }
 
     companion object {
-        fun initAndGet(dependencies: AppDependencies): AppComponent {
+        fun initAndGet(dependencies: AppFeatureDependencies): AppComponent {
             return DaggerAppComponent.builder()
-                .appDependencies(dependencies)
+                .appFeatureDependencies(dependencies)
                 .build()
         }
 

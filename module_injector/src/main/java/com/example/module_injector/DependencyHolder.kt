@@ -1,10 +1,10 @@
 package com.example.module_injector
 
-interface BaseDependencyHolder<D : BaseDependencies> {
+interface BaseDependencyHolder<D : BaseFeatureDependencies> {
     val dependencies: D
 }
 
-abstract class DependencyHolder0<D : BaseDependencies>(
+abstract class DependencyHolder0<D : BaseFeatureDependencies>(
 ) : BaseDependencyHolder<D> {
     abstract val block: (BaseDependencyHolder<D>) -> D
 
@@ -12,7 +12,7 @@ abstract class DependencyHolder0<D : BaseDependencies>(
         get() = block(this)
 }
 
-abstract class DependencyHolder1<A1 : BaseAPI, D : BaseDependencies>(
+abstract class DependencyHolder1<A1 : BaseFeatureAPI, D : BaseFeatureDependencies>(
     private val api1: A1,
 ) : BaseDependencyHolder<D> {
     abstract val block: (BaseDependencyHolder<D>, A1) -> D
@@ -21,7 +21,7 @@ abstract class DependencyHolder1<A1 : BaseAPI, D : BaseDependencies>(
         get() = block(this, api1)
 }
 
-abstract class DependencyHolder2<A1 : BaseAPI, A2 : BaseAPI, D : BaseDependencies>(
+abstract class DependencyHolder2<A1 : BaseFeatureAPI, A2 : BaseFeatureAPI, D : BaseFeatureDependencies>(
     private val api1: A1,
     private val api2: A2,
 ) : BaseDependencyHolder<D> {
@@ -31,7 +31,7 @@ abstract class DependencyHolder2<A1 : BaseAPI, A2 : BaseAPI, D : BaseDependencie
         get() = block(this, api1, api2)
 }
 
-abstract class DependencyHolder3<A1 : BaseAPI, A2 : BaseAPI, A3 : BaseAPI, D : BaseDependencies>(
+abstract class DependencyHolder3<A1 : BaseFeatureAPI, A2 : BaseFeatureAPI, A3 : BaseFeatureAPI, D : BaseFeatureDependencies>(
     private val api1: A1,
     private val api2: A2,
     private val api3: A3,

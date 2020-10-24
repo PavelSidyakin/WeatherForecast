@@ -1,12 +1,12 @@
 package com.example.module_injector
 
-interface BaseDependencies {
-    val dependencyHolder: BaseDependencyHolder<out BaseDependencies>
+interface BaseFeatureDependencies {
+    val dependencyHolder: BaseDependencyHolder<out BaseFeatureDependencies>
 }
 
-interface BaseAPI
+interface BaseFeatureAPI
 
-interface ComponentHolder<A : BaseAPI, D : BaseDependencies> {
+interface ComponentHolder<A : BaseFeatureAPI, D : BaseFeatureDependencies> {
     var dependencyProvider: (() -> D)?
     fun get(): A
 }

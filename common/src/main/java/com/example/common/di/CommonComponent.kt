@@ -1,21 +1,21 @@
 package com.example.common.di
 
-import com.example.common.CommonApi
-import com.example.common.CommonDependencies
+import com.example.common.CommonFeatureApi
+import com.example.common.CommonFeatureDependencies
 import com.example.common.logs.Logger
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(dependencies = [CommonDependencies::class], modules = [CommonModule::class])
+@Component(dependencies = [CommonFeatureDependencies::class], modules = [CommonModule::class])
 @Singleton
-internal interface CommonComponent : CommonApi {
+internal interface CommonComponent : CommonFeatureApi {
 
     val logger: Logger
 
     companion object {
-        fun initAndGet(commonDependencies: CommonDependencies): CommonComponent {
+        fun initAndGet(commonDependencies: CommonFeatureDependencies): CommonComponent {
             return DaggerCommonComponent.builder()
-                .commonDependencies(commonDependencies)
+                .commonFeatureDependencies(commonDependencies)
                 .build()
         }
     }

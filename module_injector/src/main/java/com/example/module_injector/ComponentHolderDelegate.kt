@@ -2,7 +2,7 @@ package com.example.module_injector
 
 import java.lang.ref.WeakReference
 
-class ComponentHolderDelegate<A : BaseAPI, D : BaseDependencies, C : A>(
+class ComponentHolderDelegate<A : BaseFeatureAPI, D : BaseFeatureDependencies, C : A>(
     private val componentFactory: (D) -> C
 ) : ComponentHolder<A, D> {
 
