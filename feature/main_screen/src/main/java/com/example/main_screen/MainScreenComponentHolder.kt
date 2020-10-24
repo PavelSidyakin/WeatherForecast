@@ -10,8 +10,16 @@ import com.example.module_injector.ComponentHolder
 import com.example.module_injector.ComponentHolderDelegate
 import com.example.weather_details.WeatherDetailsFragmentFactory
 
-object MainScreenComponentHolder : ComponentHolder<MainScreenApi, MainScreenDependencies> {
+interface MainScreenDependencies : BaseDependencies {
+    val cityListFragmentFactory: CityListFragmentFactory
+    val weatherDetailsFragmentFactory: WeatherDetailsFragmentFactory
+    val cityListMonitor: CityListMonitor
+    val dispatcherProvider: DispatcherProvider
+}
 
+interface MainScreenApi : BaseAPI
+
+object MainScreenComponentHolder: ComponentHolder<MainScreenApi, MainScreenDependencies> {
     private val componentHolderDelegate = ComponentHolderDelegate<
             MainScreenApi,
             MainScreenDependencies,
@@ -23,16 +31,8 @@ object MainScreenComponentHolder : ComponentHolder<MainScreenApi, MainScreenDepe
 
     override var dependencyProvider: (() -> MainScreenDependencies)? by componentHolderDelegate::dependencyProvider
 
-    override fun get(): MainScreenApi = componentHolderDelegate.get()
-}
-
-interface MainScreenDependencies : BaseDependencies {
-    val cityListFragmentFactory: CityListFragmentFactory
-    val weatherDetailsFragmentFactory: WeatherDetailsFragmentFactory
-    val cityListMonitor: CityListMonitor
-    val dispatcherProvider: DispatcherProvider
-}
-
-interface MainScreenApi : BaseAPI {
+    override fun get(): MainScreenApi {
+        return getComponent()
+    }
 }
 

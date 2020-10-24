@@ -1,7 +1,6 @@
 package com.example.weather_details.presentation.city_weather.presenter
 
 import com.example.common.coroutine_utils.DispatcherProvider
-import com.example.weather_details.WeatherDetailsComponentHolder
 import com.example.weather_details.domain.WeatherDetailsInteractor
 import com.example.weather_details.presentation.city_weather.WeatherListItemData
 import com.example.weather_details.presentation.city_weather.view.WeatherView
@@ -23,9 +22,6 @@ internal class WeatherDetailsPresenter @AssistedInject constructor(
 ) : MvpPresenter<WeatherView>(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Job() + dispatcherProvider.io()
-
-    // Save it here to prevent garbage collection on screen rotation
-    private val weatherDetailsComponent = WeatherDetailsComponentHolder.getComponent()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

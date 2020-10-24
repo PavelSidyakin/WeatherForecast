@@ -38,15 +38,19 @@ internal class MainActivity : MvpAppCompatActivity(), MainView {
         MainScreenComponentHolder.getComponent().inject(this)
         supportFragmentManager.fragmentFactory = MainActivityFragmentFactory()
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
+        if (savedInstanceState == null) {
 
-        fragmentTransaction.replace(R.id.main_activity_container, cityListFragmentFactory.createCityListFragment(), CITY_LIST_FRAGMENT_TAG)
+            val fragmentManager = supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
 
-        fragmentTransaction.commit()
-        fragmentManager.executePendingTransactions()
+            fragmentTransaction.replace(R.id.main_activity_container, cityListFragmentFactory.createCityListFragment(), CITY_LIST_FRAGMENT_TAG)
+
+            fragmentTransaction.commit()
+            fragmentManager.executePendingTransactions()
+        }
     }
 
     override fun openWeatherForCity(cityName: String) {

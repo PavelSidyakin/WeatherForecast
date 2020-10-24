@@ -5,10 +5,9 @@ import com.example.city_list.domain.GeneralSettingsRepository
 import com.example.weatherforecast.common.ApplicationProvider
 import javax.inject.Inject
 
-class GeneralSettingsRepositoryImpl
-    @Inject
-    constructor(private val applicationProvider: ApplicationProvider)
-    : GeneralSettingsRepository {
+class GeneralSettingsRepositoryImpl @Inject constructor(
+    private val applicationProvider: ApplicationProvider
+) : GeneralSettingsRepository {
 
     private val generalSharedPreferences by lazy {
         applicationProvider.applicationContext.getSharedPreferences("general", Context.MODE_PRIVATE)

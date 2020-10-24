@@ -2,8 +2,9 @@ package com.example.weatherforecast.common
 
 import android.util.Log
 import com.example.common.logs.Logger
+import javax.inject.Inject
 
-class LoggerImpl : Logger {
+class LoggerImpl @Inject constructor(): Logger {
     override fun v(tag: String, message: String) {
         Log.v(tag, message)
     }

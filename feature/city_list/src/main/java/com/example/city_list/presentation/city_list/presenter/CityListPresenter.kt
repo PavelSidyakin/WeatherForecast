@@ -1,6 +1,5 @@
 package com.example.city_list.presentation.city_list.presenter
 
-import com.example.city_list.CityListComponentHolder
 import com.example.city_list.domain.CityListUpdater
 import com.example.city_list.domain.WeatherInteractor
 import com.example.city_list.models.UpdateOfflineResultCode
@@ -25,9 +24,6 @@ internal class CityListPresenter @Inject constructor(
 ) : MvpPresenter<CityListView>(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Job() + dispatcherProvider.io()
-
-    // Save it here to prevent garbage collection on screen rotation
-    private val cityListComponent = CityListComponentHolder.getComponent()
 
     private var updateJob: Job? = null
 
