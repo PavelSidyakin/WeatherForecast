@@ -6,6 +6,10 @@ Main architecture concept: Clean Architecture (MVP for UI).
 
 This branch is a sample of using lazy module gluing using Component Holder pattern.
 
-See the article for details: https://medium.com/@pavel-sidyakin/modularization-of-android-applications-with-lazy-initialization-a091eaaa284a
+See the articles for details:
+
+EN: https://medium.com/@pavel-sidyakin/modularization-of-android-applications-with-lazy-initialization-a091eaaa284a
+
+RU: https://habr.com/ru/post/536106/
 
  
