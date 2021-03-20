@@ -2,11 +2,8 @@ package com.example.city_list.domain
 
 import com.example.city_list.CityListMonitor
 import kotlinx.coroutines.channels.Channel
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-internal class CityListObserverImpl @Inject constructor(
+internal class CityListObserverImpl(
 ) : CityListMonitor, CityListUpdater {
 
     private val channel = Channel<String>(1)

@@ -9,9 +9,8 @@ import com.example.common.logs.log
 import com.example.common.models.CityInfo
 import com.example.common.models.CityWeather
 import com.example.common.time_utils.TimeProvider
-import javax.inject.Inject
 
-internal class WeatherInteractorImpl @Inject constructor(
+internal class WeatherInteractorImpl(
     private val weatherOfflineRepository: WeatherOfflineRepository,
     private val weatherOnlineRepository: WeatherOnlineRepository,
     private val generalSettingsRepository: GeneralSettingsRepository,

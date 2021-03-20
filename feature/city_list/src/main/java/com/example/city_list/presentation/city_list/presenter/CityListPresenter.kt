@@ -13,11 +13,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import moxy.InjectViewState
 import moxy.MvpPresenter
-import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @InjectViewState
-internal class CityListPresenter @Inject constructor(
+internal class CityListPresenter(
     private val weatherInteractor: WeatherInteractor,
     private val dispatcherProvider: DispatcherProvider,
     private val cityListUpdater: CityListUpdater,
