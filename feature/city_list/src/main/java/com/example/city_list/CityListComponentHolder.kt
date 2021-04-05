@@ -26,9 +26,12 @@ object CityListComponentHolder : ComponentHolder<CityListFeatureApi, CityListFea
     override fun get(): CityListFeatureApi = componentHolderDelegate.get()
 }
 
-interface CityListFeatureDependencies : BaseFeatureDependencies {
+interface CityListFeatureDependenciesPart1: BaseFeatureDependencies {
     val dispatcherProvider: DispatcherProvider
-    val timeProvider: TimeProvider
+    fun getTimeProvider(): TimeProvider
+}
+
+interface CityListFeatureDependencies : CityListFeatureDependenciesPart1 {
 
     val generalSettingsRepository: GeneralSettingsRepository
 

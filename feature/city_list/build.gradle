@@ -53,4 +53,6 @@ dependencies {
 
     implementation project(path: ':module_injector')
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.30"
+
+    testImplementation "io.mockk:mockk:1.11.0"
 }

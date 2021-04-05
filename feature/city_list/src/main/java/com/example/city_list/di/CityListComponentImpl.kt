@@ -23,7 +23,10 @@ import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty1
+import kotlin.reflect.full.declaredMembers
+import kotlin.reflect.full.superclasses
 
 fun Module.singleWithKClass(
     qualifier: Qualifier? = null,
@@ -38,18 +41,46 @@ fun Module.singleWithKClass(
     return def
 }
 
+private fun checkDependencyCallable(dependencyGetter: KCallable<*>) {
+    if (dependencyGetter is KProperty1<*, *>) return
+    if (dependencyGetter is KFunction && dependencyGetter.parameters.size == 1) return
+
+    throw IllegalArgumentException("Dependencies interface must contain only properties or function without parameters. Invalid member: $dependencyGetter")
+}
+
+fun findAllDependencyMembers(clazz: KClass<*>): List<KCallable<*>> {
+    val allMembers = mutableListOf<KCallable<*>>()
+    if (clazz.superclasses.isNotEmpty()) {
+        clazz.superclasses.forEach { baseClass ->
+            if (baseClass != Any::class) {
+                allMembers.addAll(findAllDependencyMembers(baseClass))
+            }
+        }
+    }
+
+    allMembers.addAll(clazz.declaredMembers)
+    return allMembers
+}
+
 internal class CityListComponentImpl(private val dependencies: CityListFeatureDependencies) : CityListComponent, KoinComponent {
-    val module: Module = module {
+
+    private val module: Module = module {
+        val dependencyMembers = findAllDependencyMembers(CityListFeatureDependencies::class)
+
         dependencies::class.members
-            .filterIsInstance<KProperty1<*, *>>()
+            .filter { objectMember ->
+                dependencyMembers.any { interfaceMember -> objectMember.name == interfaceMember.name }
+            }
             .forEach { dependencyGetter: KCallable<*> ->
+                checkDependencyCallable(dependencyGetter)
                 singleWithKClass(clazz = dependencyGetter.returnType.classifier as KClass<*>) { dependencyGetter.call(dependencies) }
             }
 
         single { CityListFragmentFactoryImpl() as CityListFragmentFactory }
         single { WeatherInteractorImpl(get(), get(), get(), get()) as WeatherInteractor }
         single { CityListObserverImpl() } binds arrayOf(CityListMonitor::class, CityListUpdater::class)
-        factory { CityListPresenter(get(), get(), get()) }    }
+        factory { CityListPresenter(get(), get(), get()) }
+    }
 
     override val cityListPresenter: CityListPresenter by inject()
     override val cityListFragmentFactory: CityListFragmentFactory by inject()

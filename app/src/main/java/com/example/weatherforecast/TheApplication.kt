@@ -96,7 +96,7 @@ class TheApplication : Application() {
             CityListComponentDependencyHolder { dependencyHolder, appApi: AppFeatureApi, commonApi: CommonFeatureApi ->
                 object : CityListFeatureDependencies {
                     override val dispatcherProvider: DispatcherProvider = commonApi.dispatcherProvider
-                    override val timeProvider: TimeProvider = commonApi.timeProvider
+                    override fun getTimeProvider(): TimeProvider = commonApi.timeProvider
                     override val generalSettingsRepository: GeneralSettingsRepository = appApi.generalSettingsRepositoryImpl
                     override val weatherOfflineRepository: WeatherOfflineRepository = appApi.weatherOfflineRepositoryImpl
                     override val weatherOnlineRepository: WeatherOnlineRepository = appApi.weatherOnlineRepositoryImpl
