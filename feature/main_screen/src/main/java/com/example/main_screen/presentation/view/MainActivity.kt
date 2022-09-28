@@ -31,12 +31,8 @@ internal class MainActivity : MvpAppCompatActivity(), MainView {
     @Inject
     lateinit var weatherDetailsFragmentFactory: WeatherDetailsFragmentFactory
 
-    // TODO: Come up with something better
-    private var currentCity: String = ""
-
     override fun onCreate(savedInstanceState: Bundle?) {
         MainScreenComponentHolder.getComponent().inject(this)
-        supportFragmentManager.fragmentFactory = MainActivityFragmentFactory()
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
@@ -54,12 +50,11 @@ internal class MainActivity : MvpAppCompatActivity(), MainView {
     }
 
     override fun openWeatherForCity(cityName: String) {
-        currentCity = cityName
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
         fragmentTransaction.addToBackStack(CITY_LIST_FRAGMENT_TAG)
-        fragmentTransaction.replace(R.id.main_activity_container, weatherDetailsFragmentFactory.createWeatherDetailsFragment(currentCity), WEATHER_DETAILS_FRAGMENT_TAG)
+        fragmentTransaction.replace(R.id.main_activity_container, weatherDetailsFragmentFactory.createWeatherDetailsFragment(cityName), WEATHER_DETAILS_FRAGMENT_TAG)
 
         fragmentTransaction.commit()
         fragmentManager.executePendingTransactions()
@@ -71,15 +66,6 @@ internal class MainActivity : MvpAppCompatActivity(), MainView {
         } else {
             super.onBackPressed()
         }
-    }
-
-    internal inner class MainActivityFragmentFactory : FragmentFactory() {
-        override fun instantiate(classLoader: ClassLoader, className: String): Fragment =
-            when (loadFragmentClass(classLoader, className)) {
-                CityListFragment::class.java -> cityListFragmentFactory.createCityListFragment()
-                WeatherDetailsFragment::class.java -> weatherDetailsFragmentFactory.createWeatherDetailsFragment(currentCity)
-                else -> super.instantiate(classLoader, className)
-            }
     }
 
     companion object {

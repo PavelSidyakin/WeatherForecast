@@ -11,17 +11,19 @@ import com.example.weather_details.WeatherDetailsComponentHolder
 import com.example.weather_details.presentation.city_weather.WeatherListItemData
 import com.example.weather_details.presentation.city_weather.presenter.WeatherDetailsPresenter
 import com.example.weather_details.presentation.city_weather.view.recycler_view.WeatherListAdapter
-import kotlinx.android.synthetic.main.weather_fragment.city_weather_city_picture
-import kotlinx.android.synthetic.main.weather_fragment.city_weather_header
-import kotlinx.android.synthetic.main.weather_fragment.city_weather_recycler_temperature
+import kotlinx.android.synthetic.main.weather_fragment.*
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class WeatherDetailsFragment(private val cityName: String) : MvpAppCompatFragment(), WeatherView {
+class WeatherDetailsFragment : MvpAppCompatFragment(), WeatherView {
 
     @InjectPresenter
     internal lateinit var presenter: WeatherDetailsPresenter
+
+    private val cityName by lazy {
+        arguments?.getString(KEY_CITY_NAME).orEmpty()
+    }
 
     @ProvidePresenter
     internal fun providePresenter(): WeatherDetailsPresenter {
@@ -58,5 +60,6 @@ class WeatherDetailsFragment(private val cityName: String) : MvpAppCompatFragmen
 
     companion object {
         const val FRAGMENT_TAG = "WeatherFragment"
+        const val KEY_CITY_NAME = "KeyCityName"
     }
 }
