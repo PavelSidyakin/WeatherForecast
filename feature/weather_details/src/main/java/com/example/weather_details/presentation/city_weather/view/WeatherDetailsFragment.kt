@@ -21,14 +21,9 @@ class WeatherDetailsFragment : MvpAppCompatFragment(), WeatherView {
     @InjectPresenter
     internal lateinit var presenter: WeatherDetailsPresenter
 
-    private val cityName by lazy {
-        arguments?.getString(KEY_CITY_NAME).orEmpty()
-    }
-
     @ProvidePresenter
-    internal fun providePresenter(): WeatherDetailsPresenter {
-        return WeatherDetailsComponentHolder.getComponent().weatherDetailsPresenterFactory.create(cityName)
-    }
+    internal fun providePresenter(): WeatherDetailsPresenter =
+        WeatherDetailsComponentHolder.getComponent().weatherDetailsPresenterFactory.create(arguments.getCityName())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +55,14 @@ class WeatherDetailsFragment : MvpAppCompatFragment(), WeatherView {
 
     companion object {
         const val FRAGMENT_TAG = "WeatherFragment"
-        const val KEY_CITY_NAME = "KeyCityName"
+        private const val KEY_CITY_NAME = "KeyCityName"
+
+        fun newInstance(cityName: String) = WeatherDetailsFragment().apply {
+            if (arguments == null) arguments = Bundle()
+            arguments?.putString(KEY_CITY_NAME, cityName)
+        }
+
+        private fun Bundle?.getCityName() =
+            this?.getString(KEY_CITY_NAME) ?: throw IllegalStateException("Argument $KEY_CITY_NAME is mandatory")
     }
 }

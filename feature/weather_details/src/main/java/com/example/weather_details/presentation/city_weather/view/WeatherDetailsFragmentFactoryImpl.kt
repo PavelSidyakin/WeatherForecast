@@ -7,9 +7,6 @@ import javax.inject.Inject
 internal class WeatherDetailsFragmentFactoryImpl @Inject constructor(
 
 ) : WeatherDetailsFragmentFactory {
-    override fun createWeatherDetailsFragment(cityName: String): WeatherDetailsFragment {
-        return WeatherDetailsFragment().apply {
-            arguments = bundleOf(WeatherDetailsFragment.KEY_CITY_NAME to cityName)
-        }
-    }
+    override fun createWeatherDetailsFragment(cityName: String): WeatherDetailsFragment =
+        WeatherDetailsFragment.newInstance(cityName)
 }
